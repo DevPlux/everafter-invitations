@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+import WeddingCountdown from "@/components/wedding/WeddingCountdown";
+import { weddingData } from "@/data/wedding";
+
+import WeddingHero from "@/components/wedding/WeddingHero";
+import CoupleIntroduction from "@/components/wedding/CoupleIntroduction";
+
 type InvitationCoverProps = {
     guestName: string;
 };
@@ -121,45 +127,13 @@ function WeddingIntroduction({
                              }: WeddingIntroductionProps) {
     return (
         <main
-            className={`min-h-screen bg-[#faf7f2] transition-opacity duration-1000 ${
+            aria-hidden={!isOpen}
+            className={`bg-[#faf7f2] transition-opacity delay-300 duration-1000 ${
                 isOpen ? "opacity-100" : "opacity-0"
             }`}
         >
-            <section className="flex min-h-screen items-center justify-center px-4 py-20">
-                <div className="mx-auto max-w-3xl text-center">
-                    <p className="text-sm font-medium uppercase tracking-[0.35em] text-[#9b7b52]">
-                        Welcome to our celebration
-                    </p>
-
-                    <h1 className="mt-8 font-serif text-5xl text-[#3f493d] sm:text-7xl">
-                        Nimal <span className="italic text-[#a08158]">&</span> Amaya
-                    </h1>
-
-                    <div className="mx-auto my-8 h-px w-24 bg-[#b69b72]/60" />
-
-                    <p className="font-serif text-2xl text-stone-700 sm:text-3xl">
-                        Dear {guestName},
-                    </p>
-
-                    <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-stone-600 sm:text-lg">
-                        We are delighted to invite you to share in the joy of our wedding
-                        celebration. Your presence would make our special day even more
-                        meaningful.
-                    </p>
-
-                    <p className="mt-10 text-sm uppercase tracking-[0.3em] text-[#8c7454]">
-                        20 December 2026
-                    </p>
-
-                    <p className="mt-3 font-serif text-xl text-[#3f493d]">
-                        The Grand Ballroom, Colombo
-                    </p>
-
-                    <p className="mt-14 text-sm text-stone-400">
-                        The complete wedding details will be added in Step 6.
-                    </p>
-                </div>
-            </section>
+            <WeddingHero guestName={guestName} />
+            <CoupleIntroduction />
         </main>
     );
 }
