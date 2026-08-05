@@ -1,5 +1,5 @@
-import { WeddingWebsite } from "@/components/wedding/WeddingWebsite";
+import { LandingPage } from "@/components/wedding/LandingPage";
 
 export default function Home() {
-  return <WeddingWebsite />;
+  return <LandingPage />;
 }

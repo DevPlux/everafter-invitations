@@ -24,26 +24,45 @@ type InvitationCoverProps = {
 export default function InvitationCover({
                                             guestName,
                                         }: InvitationCoverProps) {
+    const storageKey = `wedding-invitation-opened:${guestName}`;
+
     const [isOpen, setIsOpen] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
+    const [showContent, setShowContent] = useState(false);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        document.body.style.overflow = isOpen ? "" : "hidden";
+        const wasOpened = localStorage.getItem(storageKey) === "true";
+
+        if (wasOpened) {
+            setIsOpen(true);
+            setShowContent(true);
+        }
+
+        setIsReady(true);
+    }, [storageKey]);
+
+    useEffect(() => {
+        if (!isReady) return;
+
+        document.body.style.overflow =
+            isOpen || showContent ? "" : "hidden";
 
         return () => {
             document.body.style.overflow = "";
         };
-    }, [isOpen]);
+    }, [isOpen, showContent, isReady]);
 
     useEffect(() => {
         if (!isOpening) return;
 
         const timer = window.setTimeout(() => {
+            localStorage.setItem(storageKey, "true");
             setIsOpen(true);
         }, 2400);
 
         return () => window.clearTimeout(timer);
-    }, [isOpening]);
+    }, [isOpening, storageKey]);
 
     function openInvitation() {
         if (isOpening) return;
@@ -51,9 +70,22 @@ export default function InvitationCover({
         setIsOpening(true);
     }
 
+    if (!isReady) {
+        return (
+            <div className="fixed inset-0 bg-[#f5f1e8]" />
+        );
+    }
+
     return (
         <>
-            <AnimatePresence>
+            <AnimatePresence
+                mode="wait"
+                onExitComplete={() => {
+                    if (isOpen) {
+                        setShowContent(true);
+                    }
+                }}
+            >
                 {!isOpen && (
                     <motion.section
                         key="invitation-envelope"
@@ -130,7 +162,7 @@ export default function InvitationCover({
                                         : { opacity: 1, y: 0 }
                                 }
                                 transition={{ duration: 0.6 }}
-                                className="mb-3 flex flex-col items-center text-center sm:mb-4"
+                                className="mt-10 flex flex-col items-center text-center sm:mb-4"
                             >
                                 {/* Gold ornament */}
                                 <div
@@ -142,11 +174,11 @@ export default function InvitationCover({
                                     <span className="h-px w-10 bg-gradient-to-l from-transparent to-[#b69b72]" />
                                 </div>
 
-                                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.38em] text-[#92774f] sm:text-xs">
+                                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.38em] text-[#92774f] sm:text-[14px]">
                                     A special invitation for
                                 </p>
 
-                                <h1 className="mt-1.5 max-w-2xl font-serif text-2xl leading-tight text-[#3f493d] sm:text-3xl">
+                                <h1 className="mt-1.5 max-w-2xl font-serif text-2xl leading-tight text-[#3f493d] sm:text-[40px]">
                                     {guestName}
                                 </h1>
                             </motion.div>
@@ -175,7 +207,7 @@ export default function InvitationCover({
                                     },
                                     scale: { duration: 0.7 },
                                 }}
-                                className="relative h-[290px] w-full max-w-[520px] sm:h-[345px] sm:max-w-[620px]"
+                                className="relative h-[290px] w-full max-w-[520px] sm:h-[405px] sm:max-w-[620px] sm:-mt-10"
                                 style={{ perspective: "1400px" }}
                             >
                                 {/* Envelope shadow */}
@@ -282,7 +314,9 @@ export default function InvitationCover({
                                         duration: 0.85,
                                         ease: [0.4, 0, 0.2, 1],
                                     }}
-                                    className="absolute left-0 top-[28%] z-40 h-[45%] w-full origin-top"
+                                    className={`absolute left-0 top-[28%] h-[45%] w-full origin-top ${
+                                        isOpening ? "z-10" : "z-40"
+                                    }`}
                                     style={{
                                         transformStyle: "preserve-3d",
                                         transformOrigin: "top center",
@@ -366,7 +400,9 @@ export default function InvitationCover({
                                     <span className="absolute inset-1.5 rounded-full border border-[#e2ca8d]/40" />
 
                                     <span className="relative font-serif text-lg italic sm:text-xl">
-                            N&A
+                           {weddingData.couple.partnerOne.firstName.charAt(0)}
+                                        &amp;
+                                        {weddingData.couple.partnerTwo.firstName.charAt(0)}
                         </span>
                                 </motion.button>
                             </motion.div>
@@ -429,26 +465,29 @@ export default function InvitationCover({
                 )}
             </AnimatePresence>
 
-            <WeddingIntroduction isOpen={isOpen} guestName={guestName} />
+            {showContent && (
+                <WeddingIntroduction guestName={guestName} />
+            )}
         </>
     );
 }
 
 type WeddingIntroductionProps = {
-    isOpen: boolean;
     guestName: string;
 };
 
 function WeddingIntroduction({
-                                 isOpen,
                                  guestName,
                              }: WeddingIntroductionProps) {
     return (
-        <main
-            aria-hidden={!isOpen}
-            className={`bg-[#faf7f2] transition-opacity delay-300 duration-1000 ${
-                isOpen ? "opacity-100" : "opacity-0"
-            }`}
+        <motion.main
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+                duration: 0.9,
+                ease: [0.22, 1, 0.36, 1],
+            }}
+            className="bg-[#faf7f2]"
         >
             <WeddingHero guestName={guestName} />
             <CoupleIntroduction />
@@ -460,6 +499,6 @@ function WeddingIntroduction({
             <ContactSection />
             <ClosingMessageSection />
             <WeddingFooter />
-        </main>
+        </motion.main>
     );
 }
