@@ -15,6 +15,11 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      "https://everafter-invitations.vercel.app"
+  ),
+
   title: {
     default: "Amelia & Noah | Wedding Invitation",
     template: "%s | Amelia & Noah",
