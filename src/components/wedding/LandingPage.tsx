@@ -26,7 +26,7 @@ export function LandingPage({ guestName }: { guestName?: string }) {
                 id="home"
                 className="relative grid min-h-dvh place-items-center overflow-hidden bg-[#24322c] px-6 py-24 text-center"
             >
-                {/* Animated background */}
+                {/* Animated responsive background */}
                 <motion.div
                     className="absolute inset-0"
                     initial={{ scale: 1.1 }}
@@ -36,13 +36,24 @@ export function LandingPage({ guestName }: { guestName?: string }) {
                         ease: [0.22, 1, 0.36, 1],
                     }}
                 >
+                    {/* Mobile image — visible below 768px */}
+                    <Image
+                        src="/images/wedding_hero_mobile.svg"
+                        alt=""
+                        fill
+                        priority
+                        sizes="(max-width: 767px) 100vw, 0px"
+                        className="object-cover object-center md:hidden"
+                    />
+
+                    {/* Desktop image — visible from 768px upward */}
                     <Image
                         src="/images/wedding_hero.svg"
                         alt=""
                         fill
                         priority
-                        sizes="100vw"
-                        className="object-cover object-center"
+                        sizes="(min-width: 768px) 100vw, 0px"
+                        className="hidden object-cover object-center md:block"
                     />
                 </motion.div>
 

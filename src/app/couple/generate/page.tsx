@@ -13,16 +13,28 @@ export default async function GenerateInvitationPage() {
     }
 
     return (
-        <main className="min-h-dvh bg-gradient-to-br from-stone-50 via-white to-rose-50 px-4 py-4 lg:flex lg:h-dvh lg:items-center lg:overflow-hidden lg:px-6">
-            {/* Background image */}
+        <main className="relative flex bg-gradient-to-br from-stone-50 via-white to-rose-50 px-4 py-4 lg:flex lg:h-dvh lg:items-center lg:overflow-hidden lg:px-6 overflow-x-hidden">
+
+            {/* Mobile image — visible below 768px */}
+            <Image
+                src="/images/wedding_hero_mobile.svg"
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 767px) 100vw, 0px"
+                className="object-cover object-center md:hidden"
+            />
+
+            {/* Desktop image — visible from 768px upward */}
             <Image
                 src="/images/wedding_bg.svg"
                 alt=""
                 fill
                 priority
-                sizes="100vw"
-                className="object-cover object-center"
+                sizes="(min-width: 768px) 100vw, 0px"
+                className="hidden object-cover object-center md:block"
             />
+
             {/* Single controlled overlay */}
             <section className="mx-auto w-full max-w-7xl rounded-[2rem] border border-stone-100 bg-white/95 p-5 shadow-xl backdrop-blur-sm sm:p-7 lg:max-h-[calc(100dvh-2rem)] lg:p-8">
 

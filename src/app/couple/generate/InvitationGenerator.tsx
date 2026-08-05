@@ -63,31 +63,31 @@ export default function InvitationGenerator() {
             : "";
 
     return (
-        <div className="relative mt-6 w-full">
+        <div className="relative mt-4 w-full min-w-0 sm:mt-6">
             {/* Background glows */}
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -left-20 -top-20 size-56 rounded-full bg-[#c9ada3]/25 blur-3xl"
+                className="pointer-events-none absolute -left-10 -top-12 size-36 rounded-full bg-[#c9ada3]/25 blur-3xl sm:-left-20 sm:-top-20 sm:size-56"
             />
 
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -bottom-20 -right-20 size-56 rounded-full bg-[#87988d]/25 blur-3xl"
+                className="pointer-events-none absolute -bottom-12 -right-10 size-36 rounded-full bg-[#87988d]/25 blur-3xl sm:-bottom-20 sm:-right-20 sm:size-56"
             />
 
             {/* Main card */}
-            <div className="relative overflow-hidden rounded-[2rem] border border-[#b99b72]/25 bg-[#faf7f2]/95 p-5 shadow-[0_30px_90px_rgba(39,52,46,0.16)] backdrop-blur-sm sm:p-7">
+            <div className="relative min-w-0 overflow-hidden rounded-2xl border border-[#b99b72]/25 bg-[#faf7f2]/95 p-4 shadow-[0_30px_90px_rgba(39,52,46,0.16)] backdrop-blur-sm sm:rounded-[2rem] sm:p-7">
                 {/* Inner border */}
                 <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-3 rounded-[1.6rem] border border-[#b99b72]/15"
+                    className="pointer-events-none absolute inset-2 rounded-[0.9rem] border border-[#b99b72]/15 sm:inset-3 sm:rounded-[1.6rem]"
                 />
 
                 <div className="relative">
                     {/* Header */}
-                    <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
-                            <div className="flex size-12 shrink-0 items-center justify-center rounded-full border border-[#b99b72]/30 bg-[#f0ebe3] text-[#b99b72] shadow-sm">
+                    <header className="mb-5 flex min-w-0 items-center justify-between gap-3 sm:mb-6 sm:gap-4">
+                        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#b99b72]/30 bg-[#f0ebe3] text-[#b99b72] shadow-sm sm:size-12">
                                 <svg
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -102,12 +102,12 @@ export default function InvitationGenerator() {
                                 </svg>
                             </div>
 
-                            <div>
-                                <p className="text-[0.65rem] font-bold uppercase tracking-[0.35em] text-[#43584d]">
+                            <div className="min-w-0">
+                                <p className="text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[#43584d] sm:text-[0.65rem] sm:tracking-[0.35em]">
                                     Create invitation
                                 </p>
 
-                                <h2 className="font-serif text-3xl leading-tight text-[#43584d] sm:text-4xl">
+                                <h2 className="font-serif text-2xl leading-tight text-[#43584d] sm:text-4xl">
                                     Guest Invitation
                                 </h2>
                             </div>
@@ -126,13 +126,13 @@ export default function InvitationGenerator() {
                     {/* Side-by-side layout */}
                     <div className="grid gap-5 lg:grid-cols-2">
                         {/* LEFT: Generator */}
-                        <section className="flex min-h-[260px] flex-col rounded-2xl border border-[#b99b72]/20 bg-white/45 p-5 sm:p-6">
+                        <section className="flex min-h-0 min-w-0 flex-col rounded-2xl border border-[#b99b72]/20 bg-white/45 p-4 sm:min-h-[260px] sm:p-6">
                             <div>
-                                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#43584d]/65">
+                                <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#43584d]/65 sm:text-xs sm:tracking-[0.22em]">
                                     Generate link
                                 </p>
 
-                                <h3 className="mt-1 font-serif text-2xl text-[#43584d]">
+                                <h3 className="mt-1 font-serif text-xl text-[#43584d] sm:text-2xl">
                                     Enter the guest name
                                 </h3>
 
@@ -178,7 +178,7 @@ export default function InvitationGenerator() {
                                         disabled={pending}
                                         autoComplete="off"
                                         placeholder="Mr. & Mrs. Perera and Family"
-                                        className="w-full rounded-2xl border border-[#43584d]/15 bg-white/85 py-3.5 pl-12 pr-4 text-[#43584d] shadow-sm outline-none transition duration-300 placeholder:text-[#43584d]/35 hover:border-[#43584d]/40 focus:border-[#43584d] focus:bg-white focus:ring-4 focus:ring-[#43584d]/10 disabled:cursor-not-allowed disabled:opacity-60"
+                                        className="w-full min-w-0 rounded-2xl border border-[#43584d]/15 bg-white/85 py-3.5 pl-11 pr-3 text-sm text-[#43584d] shadow-sm outline-none transition duration-300 placeholder:text-[#43584d]/35 hover:border-[#43584d]/40 focus:border-[#43584d] focus:bg-white focus:ring-4 focus:ring-[#43584d]/10 disabled:cursor-not-allowed disabled:opacity-60 sm:pl-12 sm:pr-4 sm:text-base"
                                     />
                                 </div>
 
@@ -213,7 +213,7 @@ export default function InvitationGenerator() {
                                 <button
                                     type="submit"
                                     disabled={pending}
-                                    className="group mt-auto inline-flex w-full items-center justify-center gap-3 rounded-full border border-[#43584d] bg-[#43584d] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-[0_15px_35px_rgba(67,88,77,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#56685e] hover:shadow-[0_20px_40px_rgba(67,88,77,0.28)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#43584d]/20 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60"
+                                    className="group mt-auto inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-[#43584d] bg-[#43584d] px-4 py-3.5 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-white shadow-[0_15px_35px_rgba(67,88,77,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#56685e] hover:shadow-[0_20px_40px_rgba(67,88,77,0.28)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#43584d]/20 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60 sm:gap-3 sm:px-6 sm:text-xs sm:tracking-[0.18em]"
                                 >
                                     {pending ? (
                                         <>
@@ -244,7 +244,7 @@ export default function InvitationGenerator() {
                         {/* RIGHT: Generated invitation */}
                         <section
                             aria-live="polite"
-                            className="relative flex min-h-[260px] flex-col overflow-hidden rounded-2xl border border-[#b99b72]/20 bg-[#f0ebe3]/65 p-5 sm:p-6"
+                            className="relative flex min-h-[240px] min-w-0 flex-col overflow-hidden rounded-2xl border border-[#b99b72]/20 bg-[#f0ebe3]/65 p-4 sm:min-h-[260px] sm:p-6"
                         >
                             <div
                                 aria-hidden="true"
@@ -259,7 +259,7 @@ export default function InvitationGenerator() {
                                                 Invitation for
                                             </p>
 
-                                            <h3 className="mt-1 font-serif text-3xl leading-tight text-[#43584d]">
+                                            <h3 className="mt-1 break-words font-serif text-2xl leading-tight text-[#43584d] sm:text-3xl">
                                                 {state.guestName}
                                             </h3>
                                         </div>
@@ -283,7 +283,7 @@ export default function InvitationGenerator() {
                                             Secure invitation link
                                         </label>
 
-                                        <div className="relative">
+                                        <div className="flex min-w-0 flex-col gap-2 sm:relative sm:block">
                                             <input
                                                 id="invitationUrl"
                                                 value={invitationUrl}
@@ -292,13 +292,13 @@ export default function InvitationGenerator() {
                                                     event.currentTarget.select()
                                                 }
                                                 aria-label="Generated invitation URL"
-                                                className="w-full rounded-xl border border-[#43584d]/15 bg-white/85 py-3 pl-4 pr-24 text-sm text-[#43584d] shadow-sm outline-none transition hover:border-[#43584d]/40 focus:border-[#43584d] focus:ring-4 focus:ring-[#43584d]/10"
+                                                className="w-full min-w-0 rounded-xl border border-[#43584d]/15 bg-white/85 px-3 py-3 text-xs text-[#43584d] shadow-sm outline-none transition hover:border-[#43584d]/40 focus:border-[#43584d] focus:ring-4 focus:ring-[#43584d]/10 sm:pl-4 sm:pr-24 sm:text-sm"
                                             />
 
                                             <button
                                                 type="button"
                                                 onClick={copyInvitationLink}
-                                                className="absolute inset-y-1 right-1 rounded-lg bg-[#43584d] px-4 text-[0.7rem] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-[#56685e]"
+                                                className="min-h-11 w-full rounded-lg bg-[#43584d] px-4 text-[0.7rem] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-[#56685e] sm:absolute sm:inset-y-1 sm:right-1 sm:min-h-0 sm:w-auto"
                                             >
                                                 {copied ? "Copied!" : "Copy"}
                                             </button>
@@ -306,12 +306,12 @@ export default function InvitationGenerator() {
                                     </div>
 
                                     {/* Result actions */}
-                                    <div className="mt-auto grid grid-cols-2 gap-3 pt-5">
+                                    <div className="mt-auto grid grid-cols-1 gap-3 pt-5 min-[390px]:grid-cols-2">
                                         <a
                                             href={invitationUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#43584d]/30 bg-white/75 px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] text-[#43584d] transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#43584d]/20"
+                                            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#43584d]/30 bg-white/75 px-3 py-3 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-[#43584d] transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#43584d]/20 sm:px-4 sm:text-xs sm:tracking-[0.14em]"
                                         >
                                             <svg
                                                 viewBox="0 0 24 24"
@@ -333,7 +333,7 @@ export default function InvitationGenerator() {
                                             href={whatsappUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[0_8px_25px_rgba(37,211,102,0.22)] transition hover:-translate-y-0.5 hover:bg-[#20b85f] hover:shadow-[0_14px_30px_rgba(37,211,102,0.3)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/30"
+                                            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] px-3 py-3 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_25px_rgba(37,211,102,0.22)] transition hover:-translate-y-0.5 hover:bg-[#20b85f] hover:shadow-[0_14px_30px_rgba(37,211,102,0.3)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/30 sm:px-4 sm:text-xs sm:tracking-[0.14em]"
                                         >
                                             <svg
                                                 viewBox="0 0 24 24"
@@ -378,11 +378,11 @@ export default function InvitationGenerator() {
                                         Invitation preview
                                     </p>
 
-                                    <h3 className="mt-1 font-serif text-2xl text-[#43584d]">
+                                    <h3 className="mt-1 px-2 font-serif text-xl text-[#43584d] sm:text-2xl">
                                         Your invitation will appear here
                                     </h3>
 
-                                    <p className="mt-2 max-w-sm text-sm leading-6 text-[#43584d]/70 px-5 font-medium">
+                                    <p className="mt-2 max-w-sm px-2 text-sm font-medium leading-6 text-[#43584d]/70 sm:px-5">
                                         Enter a guest or family name and generate
                                         their personalized invitation.
                                     </p>

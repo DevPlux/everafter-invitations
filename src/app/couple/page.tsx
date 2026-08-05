@@ -13,14 +13,24 @@ export default async function CoupleLoginPage() {
 
     return (
         <main className="relative flex bg-gradient-to-br from-stone-50 via-white to-rose-50 min-h-dvh items-center justify-center overflow-hidden px-5 py-12">
-            {/* Background image */}
+            {/* Mobile image — visible below 768px */}
+            <Image
+                src="/images/wedding_hero_mobile.svg"
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 767px) 100vw, 0px"
+                className="object-cover object-center md:hidden"
+            />
+
+            {/* Desktop image — visible from 768px upward */}
             <Image
                 src="/images/wedding_bg.svg"
                 alt=""
                 fill
                 priority
-                sizes="100vw"
-                className="object-cover object-center"
+                sizes="(min-width: 768px) 100vw, 0px"
+                className="hidden object-cover object-center md:block"
             />
 
             {/* Login form */}

@@ -15,6 +15,8 @@ import ContactSection from "@/components/wedding/ContactSection";
 import ClosingMessageSection from "@/components/wedding/ClosingMessageSection";
 import WeddingFooter from "@/components/wedding/WeddingFooter";
 
+import { FloatingPetals } from "@/components/wedding/FloatingPetals";
+
 import { weddingData } from "@/data/wedding";
 
 type InvitationCoverProps = {
@@ -104,14 +106,27 @@ export default function InvitationCover({
                             transition={{ duration: 1.5, ease: "easeOut" }}
                             className="absolute inset-0"
                         >
+
+                            {/* Mobile image — visible below 768px */}
+                            <Image
+                                src="/images/wedding_envelope_mobile.svg"
+                                alt=""
+                                fill
+                                priority
+                                sizes="(max-width: 767px) 100vw, 0px"
+                                className="object-cover object-center md:hidden"
+                            />
+
+                            {/* Desktop image — visible from 768px upward */}
                             <Image
                                 src="/images/wedding_envelope.svg"
                                 alt=""
                                 fill
                                 priority
-                                sizes="100vw"
-                                className="object-cover object-center"
+                                sizes="(min-width: 768px) 100vw, 0px"
+                                className="hidden object-cover object-center md:block"
                             />
+
                         </motion.div>
 
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(63,73,61,0.12),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(182,155,114,0.18),transparent_40%)]" />
@@ -293,7 +308,7 @@ export default function InvitationCover({
                                             </p>
                                         </div>
 
-                                        <p className="mx-auto mt-4 max-w-sm text-[0.68rem] leading-5 text-stone-600 sm:text-xs">
+                                        <p className="mx-auto mt-4 sm:px-0 px-6 max-w-sm text-[0.68rem] leading-5 text-stone-600 sm:text-xs">
                                             {weddingData.message.introduction}
                                         </p>
 
@@ -489,7 +504,12 @@ function WeddingIntroduction({
             }}
             className="bg-[#faf7f2]"
         >
-            <WeddingHero guestName={guestName} />
+            {/* Petals begin after the invitation opens */}
+            <div className="relative overflow-hidden">
+                <WeddingHero guestName={guestName} />
+                <FloatingPetals />
+            </div>
+
             <CoupleIntroduction />
             <StoryTimeline />
             <EventSchedule />

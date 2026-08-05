@@ -27,13 +27,24 @@ export default function WeddingHero({ guestName }: WeddingHeroProps) {
                 }}
                 className="absolute inset-0"
             >
+                {/* Mobile image — visible below 768px */}
+                <Image
+                    src="/images/wedding_invite_mobile.svg"
+                    alt=""
+                    fill
+                    priority
+                    sizes="(max-width: 767px) 100vw, 0px"
+                    className="object-cover object-center md:hidden"
+                />
+
+                {/* Desktop image — visible from 768px upward */}
                 <Image
                     src="/images/wedding_envelope.svg"
                     alt=""
                     fill
                     priority
-                    sizes="100vw"
-                    className="object-cover object-center"
+                    sizes="(min-width: 768px) 100vw, 0px"
+                    className="hidden object-cover object-center md:block"
                 />
             </motion.div>
 
@@ -153,7 +164,7 @@ export default function WeddingHero({ guestName }: WeddingHeroProps) {
                         duration: 0.9,
                         ease: smoothEase,
                     }}
-                    className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-stone-600 sm:text-base sm:leading-8"
+                    className="mx-auto sm:px-0 px-6 mt-7 max-w-2xl text-sm leading-7 text-stone-600 sm:text-base sm:leading-8"
                 >
                     {message.introduction}
                 </motion.p>
