@@ -55,12 +55,34 @@ export default function InvitationGenerator() {
         }
     }
 
-    const whatsappUrl =
+    const whatsappMessage =
         invitationUrl && state.guestName
-            ? `https://wa.me/?text=${encodeURIComponent(
-                `Dear ${state.guestName}, you are warmly invited to celebrate our wedding with us.\n\nOpen your personalized invitation:\n${invitationUrl}`,
-            )}`
+            ? [
+                `✨ *A SPECIAL WEDDING INVITATION* ✨`,
+                ``,
+                `Dear *${state.guestName}*,`,
+                ``,
+                `With joyful hearts, we warmly invite you to celebrate the wedding of`,
+                ``,
+                `💍 *Amelia & Noah* 💍`,
+                ``,
+                `Your presence would make our special day even more meaningful. We would be delighted to share this beautiful celebration with you.`,
+                ``,
+                `🌿 *View Your Personalized Invitation*`,
+                `${invitationUrl}`,
+                ``,
+                `Please open the invitation above to discover the wedding date, venue, schedule, and other details.`,
+                ``,
+                `_We cannot wait to celebrate together!_`,
+                ``,
+                `With love,`,
+                `*Amelia & Noah* 🤍`,
+            ].join("\n")
             : "";
+
+    const whatsappUrl = whatsappMessage
+        ? `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`
+        : "";
 
     return (
         <div className="relative mt-4 w-full min-w-0 sm:mt-6">
