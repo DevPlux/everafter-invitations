@@ -1,5 +1,6 @@
 import InvitationCover from "./InvitationCover";
 import { verifyInvitationToken } from "@/lib/invitations/signing";
+import { markOpenedIfNeeded } from "@/lib/invitations/repository";
 
 type InvitePageProps = {
     searchParams: Promise<{
@@ -36,5 +37,12 @@ export default async function InvitePage({
         );
     }
 
-    return <InvitationCover guestName={invitation.guestName} />;
+    // Track first-opened timestamp (idempotent)
+    try {
+        await markOpenedIfNeeded(t as string);
+    } catch (err) {
+        console.error("Failed to mark invitation opened:", err);
+    }
+
+    return <InvitationCover guestName={invitation.guestName} token={t as string} />;
 }

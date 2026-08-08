@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import CoupleIntroduction  from "./CoupleIntroduction";
 import { EventSchedule } from "./EventSchedule";
@@ -19,6 +20,63 @@ import WeddingFooter from "@/components/wedding/WeddingFooter";
 
 export function LandingPage({ guestName }: { guestName?: string }) {
     const { couple, wedding, venue, message, dressCode, contacts } = weddingData;
+    const [isHoldActive, setIsHoldActive] = useState(false);
+    const [isManageVisible, setIsManageVisible] = useState(false);
+    const holdTimerRef = useRef<number | null>(null);
+    const hideTimerRef = useRef<number | null>(null);
+
+    const clearTimers = useCallback(() => {
+        if (holdTimerRef.current !== null) {
+            window.clearTimeout(holdTimerRef.current);
+            holdTimerRef.current = null;
+        }
+
+        if (hideTimerRef.current !== null) {
+            window.clearTimeout(hideTimerRef.current);
+            hideTimerRef.current = null;
+        }
+    }, []);
+
+    const startRevealHold = useCallback(() => {
+        if (isManageVisible) {
+            return;
+        }
+
+        setIsHoldActive(true);
+        clearTimers();
+
+        holdTimerRef.current = window.setTimeout(() => {
+            holdTimerRef.current = null;
+            setIsHoldActive(false);
+            setIsManageVisible(true);
+
+            hideTimerRef.current = window.setTimeout(() => {
+                hideTimerRef.current = null;
+                setIsManageVisible(false);
+            }, 30000);
+        }, 3000);
+    }, [clearTimers, isManageVisible]);
+
+    const cancelRevealHold = useCallback(() => {
+        setIsHoldActive(false);
+
+        if (holdTimerRef.current !== null) {
+            window.clearTimeout(holdTimerRef.current);
+            holdTimerRef.current = null;
+        }
+    }, []);
+
+    const handleManageInvitationClick = useCallback(() => {
+        clearTimers();
+        setIsHoldActive(false);
+        setIsManageVisible(false);
+    }, [clearTimers]);
+
+    useEffect(() => {
+        return () => {
+            clearTimers();
+        };
+    }, [clearTimers]);
 
     return (
         <main>
@@ -119,24 +177,39 @@ export function LandingPage({ guestName }: { guestName?: string }) {
                         </motion.p>
                     )}
 
-                    <motion.h1
+                    <motion.div
                         initial={{ opacity: 0, y: 35, scale: 0.96 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                            scale: isHoldActive ? 1.01 : 1,
+                            filter: isHoldActive
+                                ? "brightness(1.04)"
+                                : "brightness(1)",
+                        }}
                         transition={{
                             delay: 0.45,
                             duration: 1,
                             ease: [0.22, 1, 0.36, 1],
                         }}
-                        className="mt-5 font-serif text-6xl leading-[0.95] text-white drop-shadow-[0_5px_20px_rgba(0,0,0,0.8)] sm:text-8xl lg:text-9xl"
+                        className="mt-5 flex justify-center"
+                        onPointerDown={startRevealHold}
+                        onPointerUp={cancelRevealHold}
+                        onPointerLeave={cancelRevealHold}
+                        onPointerCancel={cancelRevealHold}
+                        onContextMenu={(event) => event.preventDefault()}
+                        style={{ touchAction: "none" }}
                     >
-                        {couple.partnerOne.firstName}
+                        <h1 className="font-serif text-6xl leading-[0.95] text-white drop-shadow-[0_5px_20px_rgba(0,0,0,0.8)] sm:text-8xl lg:text-9xl">
+                            {couple.partnerOne.firstName}
 
-                        <span className="mx-3 inline-block text-[#f0cc94] sm:mx-5">
-                &amp;
-            </span>
+                            <span className="mx-3 inline-block text-[#f0cc94] sm:mx-5">
+                                &amp;
+                            </span>
 
-                        {couple.partnerTwo.firstName}
-                    </motion.h1>
+                            {couple.partnerTwo.firstName}
+                        </h1>
+                    </motion.div>
 
                     {/* Decorative divider */}
                     <motion.div
@@ -205,17 +278,28 @@ export function LandingPage({ guestName }: { guestName?: string }) {
                             Meet the couple
                         </motion.a>
 
-                        <motion.div
-                            whileHover={{ y: -4, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <Link
-                                href="/couple"
-                                className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/80 bg-black/30 px-7 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-white hover:text-[#28372f]"
-                            >
-                                Manage Invitations
-                            </Link>
-                        </motion.div>
+                        <AnimatePresence mode="wait">
+                            {isManageVisible && (
+                                <motion.div
+                                    key="manage-invitation"
+                                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                                    transition={{
+                                        duration: 0.35,
+                                        ease: [0.22, 1, 0.36, 1],
+                                    }}
+                                >
+                                    <Link
+                                        href="/couple"
+                                        onClick={handleManageInvitationClick}
+                                        className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/80 bg-black/30 px-7 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-white hover:text-[#28372f]"
+                                    >
+                                        Manage Invitations
+                                    </Link>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 </div>
             </section>

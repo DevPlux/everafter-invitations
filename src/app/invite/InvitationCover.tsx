@@ -21,10 +21,12 @@ import { weddingData } from "@/data/wedding";
 
 type InvitationCoverProps = {
     guestName: string;
+    token?: string;
 };
 
 export default function InvitationCover({
                                             guestName,
+                                            token,
                                         }: InvitationCoverProps) {
     const storageKey = `wedding-invitation-opened:${guestName}`;
 
@@ -481,7 +483,7 @@ export default function InvitationCover({
             </AnimatePresence>
 
             {showContent && (
-                <WeddingIntroduction guestName={guestName} />
+                <WeddingIntroduction guestName={guestName} token={token} />
             )}
         </>
     );
@@ -489,11 +491,53 @@ export default function InvitationCover({
 
 type WeddingIntroductionProps = {
     guestName: string;
+    token?: string;
 };
 
 function WeddingIntroduction({
                                  guestName,
+                                 token,
                              }: WeddingIntroductionProps) {
+    const [rsvpPending, setRsvpPending] = useState(false);
+    const [rsvpConfirmed, setRsvpConfirmed] = useState<null | boolean>(null);
+    const [rsvpMessage, setRsvpMessage] = useState<string | null>(null);
+
+    async function handleAccept() {
+        if (!token) return;
+
+        setRsvpPending(true);
+        setRsvpMessage(null);
+
+        try {
+            const res = await fetch("/api/invitations/accept", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setRsvpMessage(data?.error || "Failed to confirm attendance.");
+                setRsvpConfirmed(false);
+            } else {
+                const already = data?.invitation?.acceptedAt != null;
+                if (already) {
+                    setRsvpMessage("Your attendance has already been confirmed.");
+                } else {
+                    setRsvpMessage("Thank you — your attendance has been confirmed. We can't wait to celebrate with you.");
+                }
+
+                setRsvpConfirmed(true);
+            }
+        } catch (err) {
+            console.error(err);
+            setRsvpMessage("Unable to confirm at this time. Please try again later.");
+            setRsvpConfirmed(false);
+        } finally {
+            setRsvpPending(false);
+        }
+    }
     return (
         <motion.main
             initial={{ opacity: 0 }}
@@ -508,6 +552,27 @@ function WeddingIntroduction({
             <div className="relative overflow-hidden">
                 <WeddingHero guestName={guestName} />
                 <FloatingPetals />
+            </div>
+
+            {/* RSVP action */}
+            <div className="mx-auto mt-8 max-w-3xl px-6 text-center">
+                {rsvpMessage ? (
+                    <div className="mx-auto rounded-2xl border border-[#b99b72]/20 bg-[#fffdf8] px-6 py-5 text-center shadow-sm">
+                        <p className="font-serif text-2xl text-[#3f493d]">{rsvpConfirmed ? "Thank You" : ""}</p>
+                        <p className="mt-2 text-sm text-[#3f493d]/80">{rsvpMessage}</p>
+                    </div>
+                ) : (
+                    <div>
+                        <p className="mb-4 text-sm text-[#43584d]/70">If you plan to attend, please confirm your attendance.</p>
+                        <button
+                            onClick={handleAccept}
+                            disabled={rsvpPending || rsvpConfirmed === true}
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#43584d] bg-[#43584d] px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[#56685e] disabled:opacity-60"
+                        >
+                            {rsvpPending ? "Confirming..." : "Accept Invitation"}
+                        </button>
+                    </div>
+                )}
             </div>
 
             <CoupleIntroduction />
