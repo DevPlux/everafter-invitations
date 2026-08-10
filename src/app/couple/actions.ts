@@ -7,6 +7,7 @@ import {
     deleteCoupleSession,
 } from "@/lib/auth/session";
 import { createInvitationToken } from "@/lib/invitations/signing";
+import { createInvitationIfNotExists } from "@/lib/invitations/repository";
 import { verifyCoupleSession } from "@/lib/auth/session";
 
 export type LoginState = {
@@ -84,6 +85,14 @@ export async function generateInvitation(
     }
 
     const token = createInvitationToken({ guestName });
+
+    try {
+        // ensure a Firestore record exists for analytics
+        await createInvitationIfNotExists(token, guestName);
+    } catch (err) {
+        // do not fail the generation flow if analytics fails; log on server
+        console.error("Failed to create invitation record:", err);
+    }
 
     return {
         error: null,
