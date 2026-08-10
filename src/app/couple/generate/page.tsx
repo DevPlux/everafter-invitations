@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { logoutCouple } from "../actions";
@@ -55,27 +56,36 @@ export default async function GenerateInvitationPage() {
                         </p>
                     </div>
 
-                    <form action={logoutCouple}>
-                        <button
-                            type="submit"
-                            className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-stone-700 transition hover:border-[#43584d] hover:bg-[#43584d] hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#43584d]/20"
+                    <div className="flex flex-wrap items-center justify-end gap-3">
+                        <Link
+                            href="/couple/dashboard"
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-stone-700 transition hover:border-[#43584d] hover:bg-[#f8faf8] hover:text-[#28372f] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#43584d]/20"
                         >
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.8"
-                                className="size-4"
-                                aria-hidden="true"
-                            >
-                                <path d="M10 17l5-5-5-5" />
-                                <path d="M15 12H3" />
-                                <path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" />
-                            </svg>
+                            Dashboard
+                        </Link>
 
-                            Sign out
-                        </button>
-                    </form>
+                        <form action={logoutCouple}>
+                            <button
+                                type="submit"
+                                className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-stone-700 transition hover:border-[#43584d] hover:bg-[#43584d] hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#43584d]/20"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    className="size-4"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M10 17l5-5-5-5" />
+                                    <path d="M15 12H3" />
+                                    <path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" />
+                                </svg>
+
+                                Sign out
+                            </button>
+                        </form>
+                    </div>
                 </header>
 
                 {/* Left generator + right invitation result */}
