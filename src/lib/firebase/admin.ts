@@ -1,9 +1,20 @@
-import admin from "firebase-admin";
+import {
+  cert,
+  getApp,
+  getApps,
+  initializeApp,
+  type App,
+} from "firebase-admin/app";
 
-// Safe lazy admin initialization.
-let adminApp: typeof admin | null = null;
-let _firestore: FirebaseFirestore.Firestore | null = null;
-let _FieldValue: typeof admin.firestore.FieldValue | null = null;
+import {
+  FieldValue,
+  getFirestore as createFirestore,
+  type Firestore,
+  type Timestamp,
+} from "firebase-admin/firestore";
+
+let adminApp: App | null = null;
+let firestoreInstance: Firestore | null = null;
 
 export const isAdminEnabled = Boolean(
   process.env.FIREBASE_PROJECT_ID &&
@@ -11,69 +22,79 @@ export const isAdminEnabled = Boolean(
     process.env.FIREBASE_PRIVATE_KEY,
 );
 
-function initAdminIfNeeded() {
-  if (!isAdminEnabled) return;
-
-  // Reuse an already initialized Firebase Admin app.
-  if (admin.apps.length > 0) {
-    adminApp = admin;
-    _firestore = admin.firestore();
-    _FieldValue = admin.firestore.FieldValue;
-    return;
+function initAdminIfNeeded(): App | null {
+  if (!isAdminEnabled) {
+    return null;
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID as string;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL as string;
+  if (adminApp) {
+    return adminApp;
+  }
 
-  const privateKey = (
-    process.env.FIREBASE_PRIVATE_KEY as string
-  ).replace(/\\n/g, "\n");
+  if (getApps().length > 0) {
+    adminApp = getApp();
+  } else {
+    const projectId = process.env.FIREBASE_PROJECT_ID as string;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL as string;
+    const privateKey = (process.env.FIREBASE_PRIVATE_KEY as string).replace(
+      /\\n/g,
+      "\n",
+    );
 
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId,
-      clientEmail,
-      privateKey,
-    }),
-  });
+    adminApp = initializeApp({
+      credential: cert({
+        projectId,
+        clientEmail,
+        privateKey,
+      }),
+    });
+  }
 
-  adminApp = admin;
-  _firestore = admin.firestore();
-  _FieldValue = admin.firestore.FieldValue;
+  firestoreInstance = createFirestore(adminApp);
+
+  return adminApp;
 }
 
-export function ensureAdmin() {
+export function ensureAdmin(): App {
   if (!isAdminEnabled) {
     throw new Error(
-      "Firebase admin is not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY.",
+      "Firebase Admin is not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY.",
     );
   }
 
-  initAdminIfNeeded();
+  const app = initAdminIfNeeded();
 
-  return adminApp as typeof admin;
-}
-
-export function getFirestore() {
-  initAdminIfNeeded();
-
-  if (!_firestore) {
-    throw new Error("Firebase Firestore is not initialized.");
+  if (!app) {
+    throw new Error("Firebase Admin could not be initialized.");
   }
 
-  return _firestore;
+  return app;
 }
 
-export function getFieldValue() {
-  initAdminIfNeeded();
+export function getFirestore(): Firestore {
+  const app = initAdminIfNeeded();
 
-  if (!_FieldValue) {
-    throw new Error("Firebase FieldValue is not initialized.");
+  if (!app) {
+    throw new Error(
+      "Firebase Firestore is not configured. Check the Firebase environment variables.",
+    );
   }
 
-  return _FieldValue;
+  if (!firestoreInstance) {
+    firestoreInstance = createFirestore(app);
+  }
+
+  return firestoreInstance;
 }
 
-export type FirestoreTimestamp = FirebaseFirestore.Timestamp;
+export function getFieldValue(): typeof FieldValue {
+  if (!isAdminEnabled) {
+    throw new Error("Firebase Admin is not configured.");
+  }
+
+  return FieldValue;
+}
+
+export type FirestoreTimestamp = Timestamp;
 
 export default adminApp;
